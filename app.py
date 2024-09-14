@@ -10,7 +10,6 @@ def download_model():
     model_url = 'https://github.com/dheerajreddy71/diseasedetection/raw/main/model.h5'  # GitHub raw URL for the model
     model_path = 'plant_disease_model.h5'
     
-    # Check if the model file already exists locally to avoid re-downloading
     if not os.path.exists(model_path):
         st.write("Downloading the model...")
         response = requests.get(model_url, stream=True)
@@ -33,7 +32,7 @@ def load_model():
         model = None
     return model
 
-# Disease names (example classes)
+# Disease names
 class_names = ['Apple Scab', 'Apple Black Rot', 'Healthy', 'Corn Blight', 'Potato Late Blight']
 
 # Function to predict the disease
