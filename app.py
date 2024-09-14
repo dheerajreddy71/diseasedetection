@@ -6,7 +6,6 @@ import requests
 import os
 
 # Function to download the model from GitHub
-@st.cache_resource
 def download_model():
     model_url = 'https://github.com/dheerajreddy71/diseasedetection/raw/main/model.h5'  # GitHub raw URL for the model
     model_path = 'plant_disease_model.h5'
@@ -14,20 +13,24 @@ def download_model():
     # Check if the model file already exists locally to avoid re-downloading
     if not os.path.exists(model_path):
         st.write("Downloading the model...")
+        response = requests.get(model_url, stream=True)
         with open(model_path, 'wb') as f:
-            response = requests.get(model_url)
-            f.write(response.content)
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
         st.write("Model downloaded successfully!")
     
     return model_path
 
 # Function to load the model
-@st.cache_resource
 def load_model():
     model_path = download_model()
     st.write("Loading the model...")
-    model = tf.keras.models.load_model(model_path)
-    st.write("Model loaded successfully!")
+    try:
+        model = tf.keras.models.load_model(model_path)
+        st.write("Model loaded successfully!")
+    except Exception as e:
+        st.write(f"Error loading model: {e}")
+        model = None
     return model
 
 # Disease names (example classes)
@@ -71,13 +74,16 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption='Uploaded Image', use_column_width=True)
     
-    st.write("Classifying...")
-    predicted_class, confidence = predict_disease(image, model)
+    if model:
+        st.write("Classifying...")
+        predicted_class, confidence = predict_disease(image, model)
 
-    # Display the results
-    st.write(f"**Prediction:** {predicted_class}")
-    st.write(f"**Confidence:** {confidence:.2f}%")
+        # Display the results
+        st.write(f"**Prediction:** {predicted_class}")
+        st.write(f"**Confidence:** {confidence:.2f}%")
 
-    # Provide recommendations
-    st.write("**Treatment Recommendation:**")
-    st.write(recommend_treatment(predicted_class))
+        # Provide recommendations
+        st.write("**Treatment Recommendation:**")
+        st.write(recommend_treatment(predicted_class))
+    else:
+        st.write("Failed to load the model. Please check the logs.")
