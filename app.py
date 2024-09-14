@@ -8,14 +8,16 @@ import os
 # Function to download the model from GitHub
 @st.cache_resource
 def download_model():
-    model_url = 'https://github.com/dheerajreddy71/diseasedetection/raw/main/model.h5'  # Raw URL for the model
+    model_url = 'https://github.com/dheerajreddy71/diseasedetection/raw/main/model.h5'  # GitHub raw URL for the model
     model_path = 'plant_disease_model.h5'
     
     # Check if the model file already exists locally to avoid re-downloading
     if not os.path.exists(model_path):
+        st.write("Downloading the model...")
         with open(model_path, 'wb') as f:
             response = requests.get(model_url)
             f.write(response.content)
+        st.write("Model downloaded successfully!")
     
     return model_path
 
@@ -23,7 +25,9 @@ def download_model():
 @st.cache_resource
 def load_model():
     model_path = download_model()
+    st.write("Loading the model...")
     model = tf.keras.models.load_model(model_path)
+    st.write("Model loaded successfully!")
     return model
 
 # Disease names (example classes)
