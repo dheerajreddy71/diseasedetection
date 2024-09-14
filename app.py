@@ -7,7 +7,7 @@ import os
 
 # Function to download the model from GitHub
 def download_model():
-    model_url = 'https://github.com/dheerajreddy71/diseasedetection/raw/main/model.h5'  # GitHub raw URL for the model
+    model_url = 'https://github.com/chintamani-modak/ML-Web-Apps/blob/main/Plant%20Disease%20Prediction%20using%20Tensorflow%20%26%20Deployment%20using%20GCP/plant_disease.h5'  # GitHub raw URL for the model
     model_path = 'plant_disease_model.h5'
     
     if not os.path.exists(model_path):
