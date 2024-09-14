@@ -7,7 +7,7 @@ import asyncio
 # Async function to load model
 @st.cache_resource
 async def load_model():
-    model = tf.keras.models.load_model('plant_disease_model.h5')
+    model = tf.keras.models.load_model('https://github.com/dheerajreddy71/diseasedetection/blob/main/model.h5')
     return model
 
 # Async function for prediction
